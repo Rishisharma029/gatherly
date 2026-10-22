@@ -3,10 +3,7 @@ import {
   CheckSquare,
   Plus,
   Trash2,
-  Filter,
-  CheckCircle2,
   Clock,
-  AlertCircle,
   Tag,
   Search
 } from 'lucide-react';
@@ -202,10 +199,11 @@ export const ChecklistTab: React.FC<ChecklistTabProps> = ({ event, onRefresh, on
           <form onSubmit={handleCreateTask} className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="sm:col-span-2">
-                <label className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
+                <label htmlFor="task-title-input" className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
                   Task Title *
                 </label>
                 <input
+                  id="task-title-input"
                   type="text"
                   required
                   placeholder="e.g. Schedule bridal hair and makeup trial"
@@ -215,10 +213,11 @@ export const ChecklistTab: React.FC<ChecklistTabProps> = ({ event, onRefresh, on
                 />
               </div>
               <div>
-                <label className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
+                <label htmlFor="task-category-select" className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
                   Category
                 </label>
                 <select
+                  id="task-category-select"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   className="w-full bg-white border border-[#EAE8E0] rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-amber-500"
@@ -238,10 +237,11 @@ export const ChecklistTab: React.FC<ChecklistTabProps> = ({ event, onRefresh, on
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="sm:col-span-2">
-                <label className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
+                <label htmlFor="task-notes-input" className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
                   Notes / Instructions
                 </label>
                 <input
+                  id="task-notes-input"
                   type="text"
                   placeholder="Instructions or contact details..."
                   value={description}
@@ -251,10 +251,11 @@ export const ChecklistTab: React.FC<ChecklistTabProps> = ({ event, onRefresh, on
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
+                  <label htmlFor="task-priority-select" className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
                     Priority
                   </label>
                   <select
+                    id="task-priority-select"
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as any)}
                     className="w-full bg-white border border-[#EAE8E0] rounded-xl px-2 py-2 text-xs focus:ring-1 focus:ring-amber-500"
@@ -265,10 +266,11 @@ export const ChecklistTab: React.FC<ChecklistTabProps> = ({ event, onRefresh, on
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
+                  <label htmlFor="task-deadline-input" className="text-[10px] font-bold uppercase text-slate-500 block mb-1">
                     Deadline
                   </label>
                   <input
+                    id="task-deadline-input"
                     type="date"
                     value={deadline}
                     onChange={(e) => setDeadline(e.target.value)}
@@ -312,6 +314,7 @@ export const ChecklistTab: React.FC<ChecklistTabProps> = ({ event, onRefresh, on
                 <div className="flex items-start gap-3.5 flex-1">
                   <button
                     onClick={() => handleToggleStatus(task)}
+                    aria-label={`Mark task ${task.title} as ${isDone ? 'incomplete' : 'complete'}`}
                     className={`mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center transition ${
                       isDone
                         ? 'bg-emerald-600 border-emerald-600 text-white'
@@ -361,6 +364,7 @@ export const ChecklistTab: React.FC<ChecklistTabProps> = ({ event, onRefresh, on
                 {/* Right: Status selector + Priority + Delete */}
                 <div className="flex items-center gap-2.5">
                   <select
+                    aria-label={`Change status for task ${task.title}`}
                     value={task.status}
                     onChange={(e) => handleUpdateStatusDropdown(task, e.target.value)}
                     className={`text-[11px] font-semibold rounded-lg px-2 py-1 border transition ${
@@ -390,6 +394,7 @@ export const ChecklistTab: React.FC<ChecklistTabProps> = ({ event, onRefresh, on
 
                   <button
                     onClick={() => handleDeleteTask(task.id)}
+                    aria-label={`Delete task ${task.title}`}
                     className="p-1 rounded-md text-slate-300 hover:text-rose-600 hover:bg-rose-50 opacity-0 group-hover:opacity-100 transition"
                     title="Delete Task"
                   >

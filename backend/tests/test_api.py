@@ -1,5 +1,5 @@
 import pytest
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from fastapi.testclient import TestClient
 from backend.app.main import app
 from backend.app.database import SessionLocal
@@ -213,3 +213,117 @@ def test_security_headers_and_rate_limiting():
         assert events_res.headers.get("x-frame-options") == "DENY"
         assert "x-ratelimit-limit" in events_res.headers
         assert "x-ratelimit-remaining" in events_res.headers
+
+
+def test_deterministic_budget_presets_and_paise_arithmetic():
+    """Verify that all presets sum to exactly 100% and preserve exact paise arithmetic without rounding drift."""
+    from backend.app.services.ai_service import BUDGET_PRESETS, calculate_deterministic_categories, verify_and_get_preset
+
+    # 1. Preset percentages must sum to 100.0% exactly
+    for preset_name, preset_items in BUDGET_PRESETS.items():
+        total_pct = sum(pct for _, pct in preset_items)
+        assert abs(total_pct - 100.0) < 1e-6, f"Preset {preset_name} does not sum to 100%"
+
+    # 2. Test paise calculation on arbitrary decimal budgets
+    test_budgets = [25000.0, 15340.50, 9999.99, 1000000.0]
+    for b in test_budgets:
+        for ev_type in ["birthday", "wedding", "community"]:
+            cats = calculate_deterministic_categories(b, ev_type)
+            total_allocated = sum(c.allocated_amount for c in cats)
+            # Must equal within 1 paisa (0.01)
+            assert abs(round(total_allocated, 2) - round(b, 2)) <= 0.01, f"Mismatch for budget {b} in {ev_type}"
+
+
+def test_dynamic_timeline_generation_time_awareness():
+    """Verify time-aware timeline compression: urgent (<3 days), intermediate (14 days), and distant (30+ days)."""
+    from backend.app.services.ai_service import generate_time_aware_tasks
+
+    today = date.today()
+
+    # 1. Urgent: Event in 2 days
+    urgent_date = (today + timedelta(days=2)).strftime("%Y-%m-%d")
+    urgent_tasks, days_left, is_urgent = generate_time_aware_tasks(urgent_date, "Birthday", 30, "Faridabad")
+    assert is_urgent is True
+    assert days_left == 2
+    assert len(urgent_tasks) >= 4
+    # All task deadlines must be >= today and <= urgent_date
+    for t in urgent_tasks:
+        task_due = datetime.strptime(t.due_date, "%Y-%m-%d").date() if isinstance(t.due_date, str) else t.due_date
+        assert task_due >= today
+        assert task_due <= datetime.strptime(urgent_date, "%Y-%m-%d").date()
+
+    # 2. Intermediate: Event in 10 days
+    mid_date = (today + timedelta(days=10)).strftime("%Y-%m-%d")
+    mid_tasks, mid_days, mid_urgent = generate_time_aware_tasks(mid_date, "Wedding", 80, "Delhi")
+    assert mid_urgent is False
+    assert mid_days == 10
+    assert len(mid_tasks) == 6
+
+    # 3. Standard: Event in 45 days
+    future_date = (today + timedelta(days=45)).strftime("%Y-%m-%d")
+    standard_tasks, std_days, std_urgent = generate_time_aware_tasks(future_date, "Community", 200, "Mumbai")
+    assert std_urgent is False
+    assert std_days == 45
+    assert len(standard_tasks) >= 6
+
+
+def test_rate_limiter_in_memory_sliding_window():
+    """Unit test the sliding window rate limiter directly."""
+    from backend.app.security import InMemoryRateLimiter
+
+    limiter = InMemoryRateLimiter(requests_per_minute=5, burst_limit=5)
+    test_ip = "192.168.1.100"
+
+    # 5 requests should pass
+    for i in range(5):
+        allowed, rem, retry_after = limiter.is_allowed(test_ip)
+        assert allowed is True
+        assert rem == (4 - i)
+
+    # 6th request must be rejected
+    allowed, rem, retry_after = limiter.is_allowed(test_ip)
+    assert allowed is False
+    assert rem == 0
+    assert retry_after > 0
+
+
+def test_overbudget_shortfall_calculation():
+    """Test decimal-safe expense aggregation and shortfall trigger."""
+    with TestClient(app) as client:
+        today = date.today()
+        event_date = (today + timedelta(days=20)).strftime("%Y-%m-%d")
+
+        # Create event with 10,000 budget
+        ev_res = client.post("/api/events?auto_generate_plan=false", json={
+            "name": "Budget Boundary Test Event",
+            "event_type": "Birthday",
+            "event_date": event_date,
+            "guest_count": 20,
+            "total_budget": 10000.0,
+            "currency": "₹"
+        })
+        assert ev_res.status_code == 200
+        ev_id = ev_res.json()["id"]
+
+        # Add expense exceeding total budget
+        exp_res = client.post(f"/api/events/{ev_id}/expenses", json={
+            "description": "Premium DJ & AV",
+            "estimated_amount": 7000.0,
+            "actual_amount": 12500.0,
+            "paid_deposit": 5000.0,
+            "payment_status": "deposit_paid"
+        })
+        assert exp_res.status_code == 200
+
+        # Fetch budget summary
+        budget_res = client.get(f"/api/events/{ev_id}/budget")
+        assert budget_res.status_code == 200
+        b_data = budget_res.json()
+        assert b_data["is_over_budget"] is True
+        assert b_data["total_spent"] == 12500.0
+        assert b_data["shortfall"] == 2500.0
+        assert b_data["remaining_balance"] == 0.0
+
+        # Clean up
+        client.delete(f"/api/events/{ev_id}")
+

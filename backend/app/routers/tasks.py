@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -49,7 +49,7 @@ def create_task(event_id: str, task_in: TaskCreate, db: Session = Depends(get_db
         action=f'Added {"milestone" if task.is_milestone else "task"} "{task.title}"',
         entity_type="Task",
         entity_id=task.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -81,7 +81,7 @@ def update_task(
     for key, value in update_data.items():
         setattr(task, key, value)
 
-    task.updated_at = datetime.utcnow()
+    task.updated_at = datetime.now(timezone.utc)
 
     # Log action
     action_text = f'Updated task "{task.title}"'
@@ -97,7 +97,7 @@ def update_task(
         action=action_text,
         entity_type="Task",
         entity_id=task.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -126,7 +126,7 @@ def delete_task(task_id: str, event_id: Optional[str] = None, db: Session = Depe
         action=f'Deleted task "{task.title}"',
         entity_type="Task",
         entity_id=task_id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 

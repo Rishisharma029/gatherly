@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -151,7 +151,7 @@ def create_expense(event_id: str, expense_in: ExpenseCreate, db: Session = Depen
         action=f'Logged expense "{expense.description}" ({event.currency}{expense.actual_amount:,.2f})',
         entity_type="Expense",
         entity_id=expense.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -188,7 +188,7 @@ def update_expense(
     for key, value in update_data.items():
         setattr(expense, key, value)
 
-    expense.updated_at = datetime.utcnow()
+    expense.updated_at = datetime.now(timezone.utc)
 
     log = ActivityLog(
         event_id=expense.event_id,
@@ -196,7 +196,7 @@ def update_expense(
         action=f'Updated expense "{expense.description}"',
         entity_type="Expense",
         entity_id=expense.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -231,7 +231,7 @@ def delete_expense(expense_id: str, event_id: Optional[str] = None, db: Session 
         action=f'Deleted expense "{expense.description}"',
         entity_type="Expense",
         entity_id=expense_id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -261,7 +261,7 @@ def update_budget_category(category_id: str, cat_update: BudgetCategoryUpdate, d
 
     for k, v in cat_update.model_dump(exclude_unset=True).items():
         setattr(cat, k, v)
-    cat.updated_at = datetime.utcnow()
+    cat.updated_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(cat)
     return cat

@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -132,7 +132,7 @@ async def create_event(
         action=f'Created event "{event.name}" ({event.currency}{event.total_budget:,.0f})',
         entity_type="Event",
         entity_id=event.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -206,7 +206,7 @@ def update_event(event_id: str, event_update: EventUpdate, db: Session = Depends
     for key, value in update_data.items():
         setattr(event, key, value)
 
-    event.updated_at = datetime.utcnow()
+    event.updated_at = datetime.now(timezone.utc)
 
     log = ActivityLog(
         event_id=event.id,
@@ -214,7 +214,7 @@ def update_event(event_id: str, event_update: EventUpdate, db: Session = Depends
         action=f'Updated event details for "{event.name}"',
         entity_type="Event",
         entity_id=event.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -289,7 +289,7 @@ async def generate_plan_for_event(event_id: str, db: Session = Depends(get_db)):
         action=f"Generated AI event plan ({len(plan_data['tasks'])} tasks, {len(plan_data['categories'])} budget categories)",
         entity_type="Plan",
         entity_id=gen_record.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -342,7 +342,7 @@ def generate_ideas_endpoint(event_id: str, db: Session = Depends(get_db)):
         action=f"Generated {len(ideas)} personalized ideas",
         entity_type="Ideas",
         entity_id=gen_record.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 

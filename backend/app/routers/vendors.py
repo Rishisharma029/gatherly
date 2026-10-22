@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -38,7 +38,7 @@ def add_vendor(event_id: str, vendor_in: VendorCreate, db: Session = Depends(get
         action=f'Added vendor "{vendor.name}" ({vendor.category})',
         entity_type="Vendor",
         entity_id=vendor.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -76,7 +76,7 @@ def update_vendor(
     # Recalculate balance due
     deposit = vendor.deposit_amount if vendor.deposit_paid else 0.0
     vendor.balance_due = max(0.0, round(vendor.quoted_amount - deposit, 2))
-    vendor.updated_at = datetime.utcnow()
+    vendor.updated_at = datetime.now(timezone.utc)
 
     # Log action
     action_text = f'Updated vendor "{vendor.name}"'
@@ -89,7 +89,7 @@ def update_vendor(
         action=action_text,
         entity_type="Vendor",
         entity_id=vendor.id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 
@@ -118,7 +118,7 @@ def delete_vendor(vendor_id: str, event_id: Optional[str] = None, db: Session = 
         action=f'Deleted vendor "{vendor.name}"',
         entity_type="Vendor",
         entity_id=vendor_id,
-        timestamp_label=datetime.utcnow().strftime("%I:%M %p").lower()
+        timestamp_label=datetime.now(timezone.utc).strftime("%I:%M %p").lower()
     )
     db.add(log)
 

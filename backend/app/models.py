@@ -1,19 +1,22 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Integer, Float, Text, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, Text, Boolean, DateTime, ForeignKey, Index
 from sqlalchemy.orm import relationship
 from .database import Base
 
 def generate_uuid() -> str:
     return str(uuid.uuid4())
 
+def get_utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
 class Event(Base):
     __tablename__ = "events"
 
     id = Column(String(36), primary_key=True, default=generate_uuid, index=True)
     name = Column(String(255), nullable=False)
-    event_type = Column(String(100), default="Birthday")
-    event_date = Column(String(50), nullable=False)  # ISO string YYYY-MM-DD
+    event_type = Column(String(100), default="Birthday", index=True)
+    event_date = Column(String(50), nullable=False, index=True)  # ISO string YYYY-MM-DD
     city = Column(String(150), default="Faridabad")
     venue_type = Column(String(150), default="Home, restaurant or outdoor")
     guest_count = Column(Integer, default=40)
@@ -22,10 +25,10 @@ class Event(Base):
     theme = Column(String(200), default="Black and gold")
     atmosphere = Column(String(200), default="Minimal, elegant")
     preferences_json = Column(Text, default="{}")
-    status = Column(String(50), default="PLANNING")  # PLANNING, CONFIRMED, COMPLETED, DRAFT
+    status = Column(String(50), default="PLANNING", index=True)  # PLANNING, CONFIRMED, COMPLETED, DRAFT
     icon = Column(String(20), default="🎉")
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
+    updated_at = Column(DateTime, default=get_utc_now, onupdate=get_utc_now)
 
     # Relationships
     budget_categories = relationship("BudgetCategory", back_populates="event", cascade="all, delete-orphan")
@@ -41,10 +44,10 @@ class BudgetCategory(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid, index=True)
     event_id = Column(String(36), ForeignKey("events.id"), nullable=False, index=True)
-    name = Column(String(150), nullable=False)
+    name = Column(String(150), nullable=False, index=True)
     allocated_amount = Column(Float, default=0.0)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
+    updated_at = Column(DateTime, default=get_utc_now, onupdate=get_utc_now)
 
     event = relationship("Event", back_populates="budget_categories")
     expenses = relationship("Expense", back_populates="category", cascade="all, delete-orphan")
@@ -59,11 +62,11 @@ class Expense(Base):
     description = Column(String(255), nullable=False)
     estimated_amount = Column(Float, default=0.0)
     actual_amount = Column(Float, default=0.0)
-    payment_status = Column(String(50), default="pending")  # pending, deposit_paid, paid, refunded
+    payment_status = Column(String(50), default="pending", index=True)  # pending, deposit_paid, paid, refunded
     paid_deposit = Column(Float, default=0.0)
     notes = Column(Text, default="")
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
+    updated_at = Column(DateTime, default=get_utc_now, onupdate=get_utc_now)
 
     event = relationship("Event", back_populates="expenses")
     category = relationship("BudgetCategory", back_populates="expenses")
@@ -76,14 +79,14 @@ class Task(Base):
     event_id = Column(String(36), ForeignKey("events.id"), nullable=False, index=True)
     title = Column(String(255), nullable=False)
     description = Column(Text, default="")
-    due_date = Column(String(50), nullable=True)  # YYYY-MM-DD
-    priority = Column(String(20), default="Medium")  # High, Medium, Low
-    status = Column(String(30), default="TODO")  # TODO, IN_PROGRESS, COMPLETED
-    category = Column(String(100), default="general")
-    is_milestone = Column(Boolean, default=False)
-    is_urgent = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    due_date = Column(String(50), nullable=True, index=True)  # YYYY-MM-DD
+    priority = Column(String(20), default="Medium", index=True)  # High, Medium, Low
+    status = Column(String(30), default="TODO", index=True)  # TODO, IN_PROGRESS, COMPLETED
+    category = Column(String(100), default="general", index=True)
+    is_milestone = Column(Boolean, default=False, index=True)
+    is_urgent = Column(Boolean, default=False, index=True)
+    created_at = Column(DateTime, default=get_utc_now)
+    updated_at = Column(DateTime, default=get_utc_now, onupdate=get_utc_now)
 
     event = relationship("Event", back_populates="tasks")
 
@@ -94,22 +97,22 @@ class Vendor(Base):
     id = Column(String(36), primary_key=True, default=generate_uuid, index=True)
     event_id = Column(String(36), ForeignKey("events.id"), nullable=False, index=True)
     name = Column(String(200), nullable=False)
-    category = Column(String(100), default="catering")
+    category = Column(String(100), default="catering", index=True)
     contact_name = Column(String(150), default="")
     email = Column(String(150), default="")
     phone = Column(String(50), default="")
     website = Column(String(200), default="")
     quoted_amount = Column(Float, default=0.0)
     deposit_amount = Column(Float, default=0.0)
-    deposit_paid = Column(Boolean, default=False)
+    deposit_paid = Column(Boolean, default=False, index=True)
     balance_due = Column(Float, default=0.0)
-    booking_status = Column(String(50), default="contacted")
+    booking_status = Column(String(50), default="contacted", index=True)
     # shortlisted, contacted, quoted, booked, cancelled
     notes = Column(Text, default="")
     follow_up_date = Column(String(50), default="")
     rating = Column(Float, default=5.0)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
+    updated_at = Column(DateTime, default=get_utc_now, onupdate=get_utc_now)
 
     event = relationship("Event", back_populates="vendors")
 
@@ -119,11 +122,11 @@ class AIGeneration(Base):
 
     id = Column(String(36), primary_key=True, default=generate_uuid, index=True)
     event_id = Column(String(36), ForeignKey("events.id"), nullable=False, index=True)
-    generation_type = Column(String(100), default="plan")  # plan, ideas, timeline, chat
+    generation_type = Column(String(100), default="plan", index=True)  # plan, ideas, timeline, chat
     model = Column(String(100), default="gpt-4o-mini")
     status = Column(String(50), default="completed")  # completed, pending, failed
     content_json = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now)
 
     event = relationship("Event", back_populates="ai_generations")
 
@@ -135,9 +138,9 @@ class ActivityLog(Base):
     event_id = Column(String(36), ForeignKey("events.id"), nullable=False, index=True)
     user_name = Column(String(100), default="Planner")
     action = Column(String(300), nullable=False)
-    entity_type = Column(String(50), default="General")
+    entity_type = Column(String(50), default="General", index=True)
     entity_id = Column(String(36), nullable=True)
     timestamp_label = Column(String(50), default="")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=get_utc_now, index=True)
 
     event = relationship("Event", back_populates="activity_logs")

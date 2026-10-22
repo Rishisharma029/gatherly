@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  DollarSign,
   Plus,
   Trash2,
   Edit2,
@@ -8,8 +7,7 @@ import {
   PieChart as PieIcon,
   BarChart3,
   AlertTriangle,
-  RefreshCw,
-  TrendingDown
+  RefreshCw
 } from 'lucide-react';
 import {
   BarChart,
@@ -411,10 +409,11 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({ event, onRefresh, onOpenAs
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3"
           >
             <div className="lg:col-span-1">
-              <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+              <label htmlFor="expense-category-select" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                 Category
               </label>
               <select
+                id="expense-category-select"
                 value={formCategory}
                 onChange={(e) => setFormCategory(e.target.value)}
                 className="w-full bg-[#F8F7F2] border border-[#E5E3DC] rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-[#1F5147]"
@@ -429,10 +428,11 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({ event, onRefresh, onOpenAs
             </div>
 
             <div className="lg:col-span-2">
-              <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+              <label htmlFor="expense-desc-input" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                 Expense Description *
               </label>
               <input
+                id="expense-desc-input"
                 type="text"
                 required
                 placeholder="e.g. Vegetarian Buffet & Mocktail Bar"
@@ -443,10 +443,11 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({ event, onRefresh, onOpenAs
             </div>
 
             <div className="lg:col-span-1">
-              <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+              <label htmlFor="expense-est-input" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                 Estimated ({currency})
               </label>
               <input
+                id="expense-est-input"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
@@ -457,10 +458,11 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({ event, onRefresh, onOpenAs
             </div>
 
             <div className="lg:col-span-1">
-              <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+              <label htmlFor="expense-act-input" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                 Actual Cost ({currency})
               </label>
               <input
+                id="expense-act-input"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
@@ -471,10 +473,11 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({ event, onRefresh, onOpenAs
             </div>
 
             <div className="lg:col-span-1">
-              <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+              <label htmlFor="expense-dep-input" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                 Deposit Paid ({currency})
               </label>
               <input
+                id="expense-dep-input"
                 type="number"
                 step="0.01"
                 placeholder="0.00"
@@ -486,6 +489,8 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({ event, onRefresh, onOpenAs
 
             <div className="lg:col-span-6 flex items-center justify-between mt-2 pt-2 border-t border-[#E5E3DC]">
               <input
+                id="expense-notes-input"
+                aria-label="Vendor notes, terms or quotation details"
                 type="text"
                 placeholder="Vendor notes, terms or quotation details..."
                 value={formNotes}
@@ -586,6 +591,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({ event, onRefresh, onOpenAs
                         <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => handleStartEdit(exp)}
+                            aria-label={`Edit expense ${exp.description}`}
                             className="p-1.5 rounded-md hover:bg-slate-200/60 text-[#73756F] hover:text-[#252923] transition"
                             title="Edit"
                           >
@@ -593,6 +599,7 @@ export const BudgetTab: React.FC<BudgetTabProps> = ({ event, onRefresh, onOpenAs
                           </button>
                           <button
                             onClick={() => handleDeleteItem(exp.id)}
+                            aria-label={`Delete expense ${exp.description}`}
                             className="p-1.5 rounded-md hover:bg-rose-100/60 text-[#73756F] hover:text-rose-600 transition"
                             title="Delete"
                           >

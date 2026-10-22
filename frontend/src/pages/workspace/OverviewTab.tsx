@@ -8,8 +8,7 @@ import {
   HelpCircle,
   Sparkles,
   MoreVertical,
-  AlertTriangle,
-  ArrowRight
+  AlertTriangle
 } from 'lucide-react';
 import type { EventDetail } from '../../types';
 

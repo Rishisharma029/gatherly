@@ -260,10 +260,11 @@ export const NewEventWizardPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#252923] block mb-1">
+              <label htmlFor="wizard-name" className="text-xs font-bold text-[#252923] block mb-1">
                 Event Name *
               </label>
               <input
+                id="wizard-name"
                 type="text"
                 required
                 placeholder="e.g. Aarav's 21st Birthday"
@@ -275,10 +276,11 @@ export const NewEventWizardPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold text-[#252923] block mb-1">
+                <label htmlFor="wizard-date" className="text-xs font-bold text-[#252923] block mb-1">
                   Event Date *
                 </label>
                 <input
+                  id="wizard-date"
                   type="date"
                   required
                   value={date}
@@ -293,10 +295,11 @@ export const NewEventWizardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#252923] block mb-1">
+                <label htmlFor="wizard-city" className="text-xs font-bold text-[#252923] block mb-1">
                   City / Location *
                 </label>
                 <input
+                  id="wizard-city"
                   type="text"
                   required
                   placeholder="e.g. Faridabad"
@@ -308,10 +311,11 @@ export const NewEventWizardPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#252923] block mb-1">
+              <label htmlFor="wizard-venue" className="text-xs font-bold text-[#252923] block mb-1">
                 Venue Setting / Type
               </label>
               <input
+                id="wizard-venue"
                 type="text"
                 placeholder="e.g. Home, restaurant or outdoor"
                 value={venueType}
@@ -331,10 +335,11 @@ export const NewEventWizardPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="text-xs font-bold text-[#252923] block mb-1">
+                <label htmlFor="wizard-guests" className="text-xs font-bold text-[#252923] block mb-1">
                   Guest Count * (Positive integer)
                 </label>
                 <input
+                  id="wizard-guests"
                   type="number"
                   min="1"
                   required
@@ -346,10 +351,11 @@ export const NewEventWizardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#252923] block mb-1">
+                <label htmlFor="wizard-budget" className="text-xs font-bold text-[#252923] block mb-1">
                   Total Budget Cap * (Non-negative)
                 </label>
                 <input
+                  id="wizard-budget"
                   type="number"
                   min="0"
                   step="500"
@@ -362,10 +368,11 @@ export const NewEventWizardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#252923] block mb-1">
+                <label htmlFor="wizard-currency" className="text-xs font-bold text-[#252923] block mb-1">
                   Currency Symbol
                 </label>
                 <select
+                  id="wizard-currency"
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
                   className="w-full bg-[#F8F7F2] border border-[#E5E3DC] rounded-xl px-3.5 py-2.5 text-xs text-[#252923] focus:bg-white focus:ring-1 focus:ring-[#1F5147] font-medium"
@@ -379,10 +386,11 @@ export const NewEventWizardPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#252923] block mb-1">
+              <label htmlFor="wizard-dietary" className="text-xs font-bold text-[#252923] block mb-1">
                 Dietary Requirements & Catering Notes
               </label>
               <textarea
+                id="wizard-dietary"
                 rows={2}
                 placeholder="e.g. Vegetarian menu, no onion/garlic options for senior guests."
                 value={dietaryRequirements}
@@ -392,10 +400,11 @@ export const NewEventWizardPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#252923] block mb-1">
+              <label htmlFor="wizard-accessibility" className="text-xs font-bold text-[#252923] block mb-1">
                 Accessibility Requirements
               </label>
               <textarea
+                id="wizard-accessibility"
                 rows={2}
                 placeholder="e.g. Ground floor or lift access, step-free access for elders."
                 value={accessibilityRequirements}
@@ -415,10 +424,11 @@ export const NewEventWizardPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold text-[#252923] block mb-1">
+                <label htmlFor="wizard-theme" className="text-xs font-bold text-[#252923] block mb-1">
                   Theme Concept
                 </label>
                 <input
+                  id="wizard-theme"
                   type="text"
                   placeholder="e.g. Black and gold"
                   value={theme}
@@ -428,10 +438,11 @@ export const NewEventWizardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#252923] block mb-1">
+                <label htmlFor="wizard-atmosphere" className="text-xs font-bold text-[#252923] block mb-1">
                   Atmosphere
                 </label>
                 <input
+                  id="wizard-atmosphere"
                   type="text"
                   placeholder="e.g. Minimal, elegant"
                   value={atmosphere}
@@ -442,10 +453,11 @@ export const NewEventWizardPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#252923] block mb-1">
+              <label htmlFor="wizard-preferences" className="text-xs font-bold text-[#252923] block mb-1">
                 Event Preferences & Entertainment
               </label>
               <textarea
+                id="wizard-preferences"
                 rows={3}
                 placeholder="e.g. Vegetarian menu, music, accessibility needs, ambient photo lighting..."
                 value={preferences}

@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
-import { DashboardPage } from './pages/DashboardPage';
-import { NewEventWizardPage } from './pages/NewEventWizardPage';
-import { EventWorkspacePage } from './pages/EventWorkspacePage';
 import { AskCoordaModal } from './components/common/AskCoordaModal';
 import { api } from './api/client';
 import type { Event, EventDetail } from './types';
+
+// Code-splitting via dynamic lazy loading for maximum efficiency and sub-second TTI
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const NewEventWizardPage = lazy(() => import('./pages/NewEventWizardPage').then(m => ({ default: m.NewEventWizardPage })));
+const EventWorkspacePage = lazy(() => import('./pages/EventWorkspacePage').then(m => ({ default: m.EventWorkspacePage })));
+
+const PageLoader: React.FC = () => (
+  <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-3" role="status" aria-live="polite">
+    <div className="w-8 h-8 border-3 border-[#1F5147]/20 border-t-[#1F5147] rounded-full animate-spin" />
+    <span className="text-xs font-semibold text-[#73756F]">Loading workspace...</span>
+  </div>
+);
 
 // Main App Layout Wrapper
 const AppLayout: React.FC = () => {
@@ -41,28 +50,30 @@ const AppLayout: React.FC = () => {
           <Sidebar events={events} currentEventId={activeEvent?.id} />
         )}
 
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/events" element={<DashboardPage />} />
-            <Route path="/events/new" element={<NewEventWizardPage />} />
-            
-            {/* Event workspace and all its subtabs */}
-            <Route
-              path="/events/:eventId/*"
-              element={
-                <EventWorkspacePage
-                  onEventLoaded={(ev) => setActiveEvent(ev)}
-                  isAskCoordaOpen={isAskCoordaOpen}
-                  setIsAskCoordaOpen={setIsAskCoordaOpen}
-                />
-              }
-            />
-            
-            {/* Catch-all redirect */}
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto" id="main-content" tabIndex={-1}>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/events" element={<DashboardPage />} />
+              <Route path="/events/new" element={<NewEventWizardPage />} />
+              
+              {/* Event workspace and all its subtabs */}
+              <Route
+                path="/events/:eventId/*"
+                element={
+                  <EventWorkspacePage
+                    onEventLoaded={(ev) => setActiveEvent(ev)}
+                    isAskCoordaOpen={isAskCoordaOpen}
+                    setIsAskCoordaOpen={setIsAskCoordaOpen}
+                  />
+                }
+              />
+              
+              {/* Catch-all redirect */}
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
 

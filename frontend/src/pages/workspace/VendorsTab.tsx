@@ -245,10 +245,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
           <form onSubmit={handleAddVendor} className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-name-input" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Vendor / Business Name *
                 </label>
                 <input
+                  id="vendor-name-input"
                   type="text"
                   required
                   placeholder="e.g. Saffron Greens Hospitality"
@@ -259,10 +260,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-category-select" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Category
                 </label>
                 <select
+                  id="vendor-category-select"
                   value={category}
                   onChange={(e) => setCategory(e.target.value as any)}
                   className="w-full bg-[#F8F7F2] border border-[#E5E3DC] rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-[#1F5147] capitalize"
@@ -276,10 +278,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-status-select" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Booking Status
                 </label>
                 <select
+                  id="vendor-status-select"
                   value={status}
                   onChange={(e) => setStatus(e.target.value as any)}
                   className="w-full bg-[#F8F7F2] border border-[#E5E3DC] rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-[#1F5147] capitalize"
@@ -295,10 +298,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-contact-input" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Contact Person
                 </label>
                 <input
+                  id="vendor-contact-input"
                   type="text"
                   placeholder="e.g. Ramesh Sharma"
                   value={contactName}
@@ -308,10 +312,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-email-input" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Email Address
                 </label>
                 <input
+                  id="vendor-email-input"
                   type="email"
                   placeholder="contact@vendor.com"
                   value={email}
@@ -321,10 +326,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-phone-input" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Phone Number
                 </label>
                 <input
+                  id="vendor-phone-input"
                   type="tel"
                   placeholder="+91 98000 00000"
                   value={phone}
@@ -336,10 +342,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-est-quote" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Estimated Quote ({currency})
                 </label>
                 <input
+                  id="vendor-est-quote"
                   type="number"
                   placeholder="7500.00"
                   value={estimatedQuote}
@@ -349,10 +356,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-final-quote" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Final Quote ({currency})
                 </label>
                 <input
+                  id="vendor-final-quote"
                   type="number"
                   placeholder="6500.00"
                   value={finalQuote}
@@ -362,10 +370,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-deposit-amount" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Deposit Amount ({currency})
                 </label>
                 <input
+                  id="vendor-deposit-amount"
                   type="number"
                   placeholder="2000.00"
                   value={depositAmount}
@@ -375,10 +384,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
               </div>
 
               <div>
-                <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+                <label htmlFor="vendor-followup-date" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                   Next Follow-up Date
                 </label>
                 <input
+                  id="vendor-followup-date"
                   type="date"
                   value={followUpDate}
                   onChange={(e) => setFollowUpDate(e.target.value)}
@@ -400,10 +410,11 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
             </div>
 
             <div>
-              <label className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
+              <label htmlFor="vendor-notes-textarea" className="text-[10px] font-bold uppercase text-[#73756F] block mb-1">
                 Notes & Terms
               </label>
               <textarea
+                id="vendor-notes-textarea"
                 rows={2}
                 placeholder="Contract terms, deliverables, tasting schedule, cancellation clauses..."
                 value={notes}
@@ -485,6 +496,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
                       </span>
                       <button
                         onClick={() => handleToggleDepositPaid(vendor)}
+                        aria-label={`Toggle deposit payment for ${vendor.name}`}
                         className={`text-[9px] font-bold px-1 py-0.2 rounded ${
                           vendor.deposit_paid
                             ? 'bg-[#1F5147]/15 text-[#1F5147]'
@@ -548,6 +560,7 @@ export const VendorsTab: React.FC<VendorsTabProps> = ({ event, onRefresh }) => {
                 <span className="text-[10px] text-[#73756F]">User-entered record</span>
                 <button
                   onClick={() => handleDeleteVendor(vendor.id)}
+                  aria-label={`Remove vendor ${vendor.name}`}
                   className="text-xs text-[#73756F] hover:text-rose-600 p-1 transition"
                   title="Remove Vendor"
                 >

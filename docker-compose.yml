@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: gatherly-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GATHERLY_API_TOKEN=gatherly_prod_secure_token
+      - GATHERLY_REQUIRE_AUTH=false
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    volumes:
+      - gatherly_data:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - gatherly-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: gatherly-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - gatherly-network
+
+networks:
+  gatherly-network:
+    driver: bridge
+
+volumes:
+  gatherly_data:
+    driver: local

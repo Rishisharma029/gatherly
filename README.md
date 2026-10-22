@@ -6,6 +6,7 @@
 [![CI Pipeline](https://github.com/Rishisharma029/gatherly/actions/workflows/ci.yml/badge.svg)](https://github.com/Rishisharma029/gatherly/actions/workflows/ci.yml)
 [![Docker Build](https://github.com/Rishisharma029/gatherly/actions/workflows/docker.yml/badge.svg)](https://github.com/Rishisharma029/gatherly/actions/workflows/docker.yml)
 [![Deploy to GitHub Pages](https://github.com/Rishisharma029/gatherly/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/Rishisharma029/gatherly/actions/workflows/gh-pages.yml)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-gh--pages-1F5147?logo=github&style=flat)](https://rishisharma029.github.io/gatherly/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1F5147.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com/)
@@ -18,9 +19,16 @@
   <strong>Gatherly</strong> is an editorial-grade, full-stack event workspace combining decimal-safe budget engineering, dynamic time-aware timeline compression, vendor lifecycle management, and practical Generative AI guidance.
 </p>
 
-[Explore Live Demo](#) • [API Documentation](#-api-contract-and-endpoints) • [Security Policy](SECURITY.md) • [Report Bug](https://github.com/Rishisharma029/gatherly/issues)
+[🚀 Explore Live Demo](https://rishisharma029.github.io/gatherly/) • [📖 API Documentation](#-api-contract-and-endpoints) • [🛡️ Security Policy](SECURITY.md) • [Report Bug](https://github.com/Rishisharma029/gatherly/issues)
 
 </div>
+
+---
+
+> ### 🌐 Live Web Application
+> **Gatherly is deployed and accessible at**:  
+> **👉 [https://rishisharma029.github.io/gatherly/](https://rishisharma029.github.io/gatherly/)**  
+> *Pre-configured with Aarav's 21st Birthday (₹25,000 budget ceiling, 30-day compressed timeline, vegetarian catering quotes, and black/gold aesthetic plan).*
 
 ---
 
